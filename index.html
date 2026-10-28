@@ -382,15 +382,12 @@
           formatta(bonus);
         
         const votoFinale = document.getElementById("finale");
-        
+
         if (finale > 114) {
           votoFinale.innerHTML =
             formatta(finale) + ' (<span class="lode">110L</span>)';
-        } if (finale > 110 && finale < 114) {
-          votoFinale.textContent = formatta(finale) + "/110" + ", (110)" ;
         } else {
-          votoFinale.textContent =
-            formatta(finale) + "/110";
+          votoFinale.textContent = formatta(finale) + "/110";
         }
         
         document.getElementById("stato").textContent =
