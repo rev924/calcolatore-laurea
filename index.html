@@ -12,7 +12,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calcolo del voto di laurea</title>
-  <meta name="description" content="Calcola la media ponderata, la base di laurea e il bonus CFU.">
+  <meta name="description" content="Calcola la media ponderata, la base di laurea e i punti velocita'.">
   
     
 
@@ -249,7 +249,7 @@
 <body>
   <header>
     <h1>Calcolo del voto di laurea</h1>
-    <p>Media ponderata, base di laurea e bonus CFU</p>
+    <p>Media ponderata, base di laurea e punti velocita'</p>
     <p>NOTA BENE:</p>
      <p>la media è calcolata su 169 CFU in quanto: l'abilitazione di inglese (3CFU), le ulteriori attivita' formative (2CFU) e la prova finale (6CFU) non costituiscono voto ma solo una idoneita'</p>
   </header>
@@ -277,13 +277,13 @@
   
     <p class="hint">
       Spunta gli esami sostenuti entro il 30 settembre del terzo anno.
-      I CFU verranno calcolati automaticamente. Per le attività senza voto,
-      seleziona prima l'idoneità e indica se è stata conseguita entro la scadenza.
+      I CFU verranno calcolati automaticamente. Per le attivita' senza voto,
+      seleziona prima l'idoneita' e indica se è stata conseguita entro la scadenza.
       La Prova Finale consiste in una presentazione orale, di fronte alla Commissione, di una tesina del valore di 6 CFU, 
-      impiegando mezzi informatici che corrispondono ad ulteriori 2 CFU (quelli indicati nel SOL come "Ulteriori attività formative").
+      impiegando mezzi informatici che corrispondono ad ulteriori 2 CFU (quelli indicati nel SOL come "Ulteriori attivita' formative").
     </p>
   
-    <h3>Attività senza voto</h3>
+    <h3>Attivita' senza voto</h3>
   
     <div class="activities-grid">
       <div class="activity">
@@ -312,7 +312,7 @@
   
       <div class="activity">
         <label for="attivita-ulteriori">
-          Ulteriori attività formative (2 CFU)
+          Ulteriori attivita' formative (2 CFU)
         </label>
         <select id="attivita-ulteriori">
           <option value="no">Non sostenuto</option>
@@ -331,7 +331,7 @@
       <strong id="cfu-automatici">0</strong>
       <span> / 180 CFU</span>
       <p class="hint">
-        Bonus velocità: <strong id="bonus-automatico">0,000</strong> punti.
+        Punti velocita': <strong id="bonus-automatico">0,000</strong> punti.
       </p>
     </div>
   </section>
@@ -339,7 +339,7 @@
       <h2>3. I tuoi risultati</h2>
       <p class="hint">
         Il voto finale stimato è calcolato sommando la base di laurea
-        e i punti velocità. In base al regolamento se il voto complessivo è uguale o maggiore a 110/110, la Commissione, all'unanimità, può assegnare la lode. 
+        e i punti velocita'. In base al regolamento se il voto complessivo è uguale o maggiore a 110/110, la Commissione, all'unanimita', può assegnare la lode. 
         Come indicazione generale, un punteggio totale, secondo le regole sopra indicate, superiore (prima dell'arrotondamento) a 114 dovrebbe, salvo diversa opinione della Commissione, dar luogo all'assegnazione della lode.
       </p>
       <div class="results">
@@ -425,7 +425,7 @@
       ["Laboratorio di informatica", 9],
       ["Meccanica analitica", 6],
       ["Metodi matematici per la fisica", 12],
-      ["Relatività speciale e elettrodinamica", 6],
+      ["Relativita' speciale e elettrodinamica", 6],
       ["Corso a scelta 1", 6],
       ["Fisica Subatomica", 9],
       ["Corso a scelta 2", 6],
@@ -545,7 +545,7 @@
       });
 
       
-      // Le tre attività senza voto valgono CFU solo se risultano
+      // Le tre attivita' senza voto valgono CFU solo se risultano
       // idonee e completate entro la scadenza.
       const attivita = [
         { select: "attivita-inglese", checkbox: "entro-inglese", cfu: 3 },
@@ -557,7 +557,7 @@
         const stato = document.getElementById(select);
         const entro = document.getElementById(checkbox);
 
-        // La spunta è utilizzabile solo se l'attività è idonea.
+        // La spunta è utilizzabile solo se l'attivita' è idonea.
         entro.disabled = stato.value !== "si";
 
         if (entro.disabled) {
