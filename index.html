@@ -2,6 +2,13 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+
+  <script 
+    defer 
+    src="https://cloud.umami.is/script.js" 
+    data-website-id="8ce4eb3f-1ff1-42ba-bc0c-26685613768e">
+  </script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calcolo del voto di laurea</title>
@@ -237,6 +244,17 @@
   </main>
 
   <script>
+      // Variabili per il monitoraggio delle statistiche
+      let calcoloCompletatoRegistrato = false;
+      let interazioneRegistrata = false;
+    
+      // Funzione per inviare gli eventi a Umami
+      function registraEvento(nomeEvento) {
+        if (typeof window.umami !== "undefined") {
+          window.umami.track(nomeEvento);
+        }
+      }
+    
     const esami = [
       ["Analisi Matematica I", 10],
       ["Analisi Matematica II", 12],
@@ -286,12 +304,27 @@
       campo.append(label, input, errore);
       contenitore.appendChild(campo);
 
-      input.addEventListener("input", calcola);
+      input.addEventListener("input", () => {
+        if (!interazioneRegistrata) {
+          registraEvento("interazione_calcolatore");
+          interazioneRegistrata = true;
+        }
+      
+        calcola();
+      });
     });
 
     const campoCfu = document.getElementById("cfu");
-    campoCfu.addEventListener("input", calcola);
 
+    campoCfu.addEventListener("input", () => {
+      if (!interazioneRegistrata) {
+        registraEvento("interazione_calcolatore");
+        interazioneRegistrata = true;
+      }
+    
+      calcola();
+    });
+    
     function formatta(numero) {
       return numero.toFixed(3).replace(".", ",");
     }
@@ -395,7 +428,10 @@
         } else {
           votoFinale.textContent = formatta(finale) + "/110";
         }
-        
+        if (!calcoloCompletatoRegistrato) {
+          registraEvento("calcolo_completato");
+          calcoloCompletatoRegistrato = true;
+        }
         document.getElementById("stato").textContent =
           "Calcolo aggiornato. I 19 esami sono stati inseriti correttamente.";
       } else {
