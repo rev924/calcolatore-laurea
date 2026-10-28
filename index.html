@@ -16,9 +16,11 @@
       --border: #dce3ef;
     }
 
-    .lode {
-      color: #dc2626;
-      font-weight: bold;
+    .result.highlight .lode {
+    display: inline;
+    color: #ff4d4d;
+    font-weight: bold;
+    font-size: inherit;
     }
 
     * { box-sizing: border-box; }
@@ -386,7 +388,12 @@
         if (finale > 114) {
           votoFinale.innerHTML =
             formatta(finale) + ' (<span class="lode">110L</span>)';
-        } else {
+        }
+        if (finale < 114 && finale>100) {
+          votoFinale.innerHTML =
+            formatta(finale) + ' (110)';
+        }
+        else {
           votoFinale.textContent = formatta(finale) + "/110";
         }
         
