@@ -14,10 +14,11 @@
       --text: #172033;
       --muted: #667085;
       --border: #dce3ef;
-      .lode {
+    }
+
+    .lode {
       color: #dc2626;
       font-weight: bold;
-      }
     }
 
     * { box-sizing: border-box; }
@@ -379,17 +380,19 @@
           formatta(base) + "/110";
         document.getElementById("bonus").textContent =
           formatta(bonus);
+        
         const votoFinale = document.getElementById("finale");
         
         if (finale > 114) {
-          votoFinale.textContent = formatta(finale) +"/110" + ' (<span class="lode">110L</span>)';
-        } 
-        if (110 < finale < 114) {
+          votoFinale.innerHTML =
+            formatta(finale) + ' (<span class="lode">110L</span>)';
+        } if (finale > 110 && finale < 114) {
           votoFinale.textContent = formatta(finale) + "/110" + ", (110)" ;
+        } else {
+          votoFinale.textContent =
+            formatta(finale) + "/110";
         }
-        else {
-          votoFinale.textContent = formatta(finale) + "/110", ;
-        }
+        
         document.getElementById("stato").textContent =
           "Calcolo aggiornato. I 19 esami sono stati inseriti correttamente.";
       } else {
