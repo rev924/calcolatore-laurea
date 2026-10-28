@@ -14,6 +14,10 @@
       --text: #172033;
       --muted: #667085;
       --border: #dce3ef;
+      .lode {
+      color: #dc2626;
+      font-weight: bold;
+      }
     }
 
     * { box-sizing: border-box; }
@@ -195,6 +199,11 @@
 
     <section class="panel" aria-live="polite">
       <h2>3. I tuoi risultati</h2>
+      <p class="hint">
+        Il voto finale stimato è calcolato sommando la base di laurea
+        e i punti velocità. In base al regolamento se il risultato supera 114 si ottiene la lode e viene indicato
+        come 110L (110 e lode).
+      </p>
       <div class="results">
         <div class="result">
           <span>Media ponderata</span>
@@ -370,9 +379,17 @@
           formatta(base) + "/110";
         document.getElementById("bonus").textContent =
           formatta(bonus);
-        document.getElementById("finale").textContent =
-          formatta(finale) + "/110";
-
+        const votoFinale = document.getElementById("finale");
+        
+        if (finale > 114) {
+          votoFinale.textContent = formatta(finale) +"/110" + ' (<span class="lode">110L</span>)';
+        } 
+        if (110 < finale < 114) {
+          votoFinale.textContent = formatta(finale) + "/110" + ", (110)" ;
+        }
+        else {
+          votoFinale.textContent = formatta(finale) + "/110", ;
+        }
         document.getElementById("stato").textContent =
           "Calcolo aggiornato. I 19 esami sono stati inseriti correttamente.";
       } else {
