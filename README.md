@@ -48,12 +48,6 @@ I risultati sono indicativi e devono essere verificati rispetto al regolamento u
 - JavaScript
 - GitHub Pages
 
-## Pubblicazione
-
-Il sito è pubblicato tramite GitHub Pages ed è accessibile attraverso il link associato al repository.
-
-Per attivare GitHub Pages, vai in **Settings → Pages**, seleziona `Deploy from a branch`, scegli il branch `main` e la cartella `/(root)`.
-
 ## Privacy
 
 I calcoli vengono eseguiti direttamente nel browser. I voti inseriti non vengono inviati a un server né salvati automaticamente in un database.
