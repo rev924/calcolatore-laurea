@@ -9,7 +9,7 @@ Una semplice applicazione web per calcolare la media ponderata degli esami (incl
 - Gestione del 30L, considerato equivalente a 33 nel calcolo della media.
 - Calcolo automatico della media ponderata.
 - Conversione della media in base di laurea su 110.
-- Calcolo del bonus CFU.
+- Calcolo dei punti velocita'.
 - Aggiornamento automatico dei risultati quando si modificano i dati.
 - Interfaccia responsive, utilizzabile da computer, tablet e smartphone.
 - Nessuna installazione richiesta.
@@ -24,13 +24,13 @@ La media viene calcolata utilizzando i CFU associati a ciascun esame, con un tot
 
 Base di laurea = Media ponderata × (110 / 30)
 
-**Bonus CFU**
+**Punti velocita'**
 
-Bonus = CFU acquisiti entro il 30 settembre del terzo anno di iscrizione × 0,035
+Punti velocita' = CFU acquisiti entro il 30 settembre del terzo anno di iscrizione × 0,035
 
 **Voto finale stimato**
 
-Voto finale = Base di laurea + Bonus CFU
+Voto finale = Base di laurea + Punti velocita' CFU
 
 I risultati sono indicativi e devono essere verificati rispetto al regolamento ufficiale del proprio corso di laurea.
 
@@ -54,4 +54,4 @@ I calcoli vengono eseguiti direttamente nel browser. I voti inseriti non vengono
 
 ## Disclaimer
 
-Questo progetto è uno strumento informativo e non sostituisce i criteri ufficiali di calcolo del voto di laurea stabiliti dall'università.
+Questo progetto è uno strumento informativo e non sostituisce i criteri ufficiali di calcolo del voto di laurea stabiliti dall'universita'.
