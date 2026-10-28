@@ -657,7 +657,7 @@
 document.getElementById("reset").addEventListener("click", () => {
   esami.forEach((_, i) => {
     document.getElementById("voto-" + i).value = "";
-    document.getElementById("entro-" + i).checked = false;
+    document.getElementById("entro-" + i).checked = true;
   });
 
   [
