@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-
+  
   <script 
     defer 
     src="https://cloud.umami.is/script.js" 
@@ -244,16 +244,46 @@
   </main>
 
   <script>
-      // Variabili per il monitoraggio delle statistiche
-      let calcoloCompletatoRegistrato = false;
-      let interazioneRegistrata = false;
-    
-      // Funzione per inviare gli eventi a Umami
+      // Gestione degli eventi Umami
+      const eventiInCoda = [];
+
       function registraEvento(nomeEvento) {
-        if (typeof window.umami !== "undefined") {
+        if (typeof window.umami?.track === "function") {
           window.umami.track(nomeEvento);
+        } else {
+          eventiInCoda.push(nomeEvento);
         }
       }
+
+      // Recupera gli eventi eventualmente registrati prima
+      // che lo script Umami fosse disponibile.
+      document.addEventListener("DOMContentLoaded", () => {
+        while (
+          eventiInCoda.length > 0 &&
+          typeof window.umami?.track === "function"
+        ) {
+          window.umami.track(eventiInCoda.shift());
+        }
+      });
+
+      // Evita di contare più volte il completamento nella stessa
+      // scheda/sessione del browser.
+      const chiaveCompletamento = "umami_completamento_19_voti";
+      let completamentoRegistrato = false;
+
+      try {
+        completamentoRegistrato =
+          sessionStorage.getItem(chiaveCompletamento) === "1";
+      } catch (errore) {
+        // Se sessionStorage non è disponibile, vale la variabile locale.
+      }
+
+      // Stato precedente: serve a contare solo le nuove transizioni
+      // da voti incompleti a 19 voti tutti validi.
+      let completoPrecedente = false;
+
+      // Registra un accesso per ogni caricamento della pagina.
+      registraEvento("accesso_calcolatore");
     
     const esami = [
       ["Analisi Matematica I", 10],
@@ -304,26 +334,12 @@
       campo.append(label, input, errore);
       contenitore.appendChild(campo);
 
-      input.addEventListener("input", () => {
-        if (!interazioneRegistrata) {
-          registraEvento("interazione_calcolatore");
-          interazioneRegistrata = true;
-        }
-      
-        calcola();
-      });
+      input.addEventListener("input", calcola);
     });
 
     const campoCfu = document.getElementById("cfu");
 
-    campoCfu.addEventListener("input", () => {
-      if (!interazioneRegistrata) {
-        registraEvento("interazione_calcolatore");
-        interazioneRegistrata = true;
-      }
-    
-      calcola();
-    });
+    campoCfu.addEventListener("input", calcola);
     
     function formatta(numero) {
       return numero.toFixed(3).replace(".", ",");
@@ -400,6 +416,28 @@
       const completo = votiValidi === esami.length && errori === 0;
       const datiValidi = completo && cfuValido;
 
+      
+      // Conta il completamento dei 19 voti solo quando si passa
+      // da una situazione incompleta a una situazione completa.
+      if (completo && !completoPrecedente) {
+        registraEvento("inserimento_19_voti_completo");
+
+        // Un solo evento di completamento per sessione della scheda.
+        if (!completamentoRegistrato) {
+          registraEvento("completamento_19_voti");
+          completamentoRegistrato = true;
+
+          try {
+            sessionStorage.setItem(chiaveCompletamento, "1");
+          } catch (errore) {
+            // Il monitoraggio continua anche senza sessionStorage.
+          }
+        }
+      }
+
+      completoPrecedente = completo;
+
+
       document.getElementById("media").textContent = "—";
       document.getElementById("base").textContent = "—";
       document.getElementById("bonus").textContent = "—";
@@ -427,10 +465,6 @@
           votoFinale.textContent = formatta(finale) + " (110)";
         } else {
           votoFinale.textContent = formatta(finale) + "/110";
-        }
-        if (!calcoloCompletatoRegistrato) {
-          registraEvento("calcolo_completato");
-          calcoloCompletatoRegistrato = true;
         }
         document.getElementById("stato").textContent =
           "Calcolo aggiornato. I 19 esami sono stati inseriti correttamente.";
