@@ -13,6 +13,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calcolo del voto di laurea</title>
   <meta name="description" content="Calcola la media ponderata, la base di laurea e il bonus CFU.">
+  
+    
+
   <style>
     :root {
       color-scheme: light;
@@ -172,6 +175,74 @@
       .panel { padding: 16px; }
       .result strong { font-size: 1.4rem; }
     }
+
+    .exam-deadline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+  
+    .exam-deadline input,
+    .activity-deadline input {
+      width: 19px;
+      height: 19px;
+      min-width: 19px;
+      margin: 0;
+      accent-color: #16a34a;
+      cursor: pointer;
+    }
+  
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+  
+    .activity {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+    }
+  
+    .activity select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font: inherit;
+      background: white;
+      color: var(--text);
+    }
+  
+    .activity-deadline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+  
+    .cfu-summary {
+      padding: 16px;
+      border-radius: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      margin-top: 16px;
+    }
+  
+    .cfu-summary strong {
+      color: #15803d;
+      font-size: 1.5rem;
+    }
+
+    
   </style>
 </head>
 
@@ -198,15 +269,67 @@
         </button>
       </div>
     </section>
-
-    <section class="panel">
-      <h2>2. CFU acquisiti entro il 30 settembre</h2>
-      <label for="cfu">CFU acquisiti entro il 30 settembre del terzo anno di iscrizione (0-180) costituiscono i punti velocita'</label>
-      <input id="cfu" type="number" min="0" max="180" step="1" value="0">
-      <p class="hint">Il bonus è calcolato con la formula CFU × 0,035.</p>
-      <p id="cfu-error" class="error" role="alert"></p>
-    </section>
-
+  <section class="panel">
+    <h2>2. CFU acquisiti entro il 30 settembre</h2>
+  
+    <p class="hint">
+      Spunta gli esami sostenuti entro il 30 settembre del terzo anno.
+      I CFU verranno calcolati automaticamente. Per le attività senza voto,
+      seleziona prima l'idoneità e indica se è stata conseguita entro la scadenza.
+    </p>
+  
+    <h3>Attività senza voto</h3>
+  
+    <div class="activities-grid">
+      <div class="activity">
+        <label for="attivita-inglese">Lingua inglese (3 CFU)</label>
+        <select id="attivita-inglese">
+          <option value="no">Non sostenuto</option>
+          <option value="si">Idoneo</option>
+        </select>
+        <label class="activity-deadline">
+          <input type="checkbox" id="entro-inglese" disabled>
+          Entro il 30 settembre
+        </label>
+      </div>
+  
+      <div class="activity">
+        <label for="attivita-finale">Prova finale (6 CFU)</label>
+        <select id="attivita-finale">
+          <option value="no">Non sostenuto</option>
+          <option value="si">Idoneo</option>
+        </select>
+        <label class="activity-deadline">
+          <input type="checkbox" id="entro-finale" disabled>
+          Entro il 30 settembre
+        </label>
+      </div>
+  
+      <div class="activity">
+        <label for="attivita-ulteriori">
+          Ulteriori attività formative (2 CFU)
+        </label>
+        <select id="attivita-ulteriori">
+          <option value="no">Non sostenuto</option>
+          <option value="si">Idoneo</option>
+        </select>
+        <label class="activity-deadline">
+          <input type="checkbox" id="entro-ulteriori" disabled>
+          Entro il 30 settembre
+        </label>
+      </div>
+    </div>
+  
+    <div class="cfu-summary" aria-live="polite">
+      <span>CFU acquisiti entro la scadenza</span>
+      <br>
+      <strong id="cfu-automatici">0</strong>
+      <span> / 180 CFU</span>
+      <p class="hint">
+        Bonus velocità: <strong id="bonus-automatico">0,000</strong> punti.
+      </p>
+    </div>
+  </section>
     <section class="panel" aria-live="polite">
       <h2>3. I tuoi risultati</h2>
       <p class="hint">
@@ -331,15 +454,26 @@
       errore.className = "error";
       errore.setAttribute("role", "alert");
 
-      campo.append(label, input, errore);
+      
+      const labelScadenza = document.createElement("label");
+      const checkboxScadenza = document.createElement("input");
+
+      labelScadenza.className = "exam-deadline";
+      checkboxScadenza.type = "checkbox";
+      checkboxScadenza.id = "entro-" + i;
+
+      labelScadenza.append(
+        checkboxScadenza,
+        document.createTextNode("Sostenuto entro il 30 settembre")
+      );
+
+      campo.append(label, input, errore, labelScadenza);
       contenitore.appendChild(campo);
 
       input.addEventListener("input", calcola);
+      checkboxScadenza.addEventListener("change", calcola);
+
     });
-
-    const campoCfu = document.getElementById("cfu");
-
-    campoCfu.addEventListener("input", calcola);
     
     function formatta(numero) {
       return numero.toFixed(3).replace(".", ",");
@@ -376,7 +510,8 @@
       let sommaPesata = 0;
       let votiValidi = 0;
       let errori = 0;
-
+      let cfuEntroScadenza = 0;
+      
       esami.forEach(([nome, peso], i) => {
         const input = document.getElementById("voto-" + i);
         const messaggio = document.getElementById("errore-" + i);
@@ -396,25 +531,56 @@
 
         sommaPesata += risultato.voto * peso;
         votiValidi++;
+        const checkboxScadenza = document.getElementById("entro-" + i);
+
+        checkboxScadenza.disabled = risultato.vuoto || Boolean(risultato.errore);
+        
+        if (checkboxScadenza.disabled) {
+          checkboxScadenza.checked = false;
+        }
+        
+        if (!risultato.vuoto && !risultato.errore && checkboxScadenza.checked) {
+          cfuEntroScadenza += peso;
+        }
       });
 
-      const cfu = campoCfu.value.trim() === ""
-        ? NaN
-        : Number(campoCfu.value);
+      
+      // Le tre attività senza voto valgono CFU solo se risultano
+      // idonee e completate entro la scadenza.
+      const attivita = [
+        { select: "attivita-inglese", checkbox: "entro-inglese", cfu: 3 },
+        { select: "attivita-finale", checkbox: "entro-finale", cfu: 6 },
+        { select: "attivita-ulteriori", checkbox: "entro-ulteriori", cfu: 2 }
+      ];
 
-      const erroreCfu = document.getElementById("cfu-error");
-      erroreCfu.textContent = "";
+      attivita.forEach(({ select, checkbox, cfu }) => {
+        const stato = document.getElementById(select);
+        const entro = document.getElementById(checkbox);
 
-      const cfuValido = Number.isFinite(cfu) &&
-        cfu >= 0 && cfu <= 180 && Number.isInteger(cfu);
+        // La spunta è utilizzabile solo se l'attività è idonea.
+        entro.disabled = stato.value !== "si";
 
-      if (!cfuValido) {
-        erroreCfu.textContent =
-          "Inserisci un numero intero di CFU compreso tra 0 e 180.";
-      }
+        if (entro.disabled) {
+          entro.checked = false;
+        }
+
+        if (stato.value === "si" && entro.checked) {
+          cfuEntroScadenza += cfu;
+        }
+      });
+
+      const bonusAutomatico = cfuEntroScadenza * 0.035;
+
+      document.getElementById("cfu-automatici").textContent =
+        cfuEntroScadenza;
+
+      document.getElementById("bonus-automatico").textContent =
+        formatta(bonusAutomatico);
+
+      const cfu = cfuEntroScadenza;
 
       const completo = votiValidi === esami.length && errori === 0;
-      const datiValidi = completo && cfuValido;
+      const datiValidi = completo;
 
       
       // Conta il completamento dei 19 voti solo quando si passa
@@ -477,14 +643,42 @@
       }
     }
 
-    document.getElementById("reset").addEventListener("click", () => {
-      esami.forEach((_, i) => {
-        document.getElementById("voto-" + i).value = "";
-      });
-
-      campoCfu.value = "0";
-      calcola();
+    [
+      ["attivita-inglese", "entro-inglese"],
+      ["attivita-finale", "entro-finale"],
+      ["attivita-ulteriori", "entro-ulteriori"]
+    ].forEach(([selectId, checkboxId]) => {
+      document.getElementById(selectId).addEventListener("change", calcola);
+      document.getElementById(checkboxId).addEventListener("change", calcola);
     });
+
+    
+    
+document.getElementById("reset").addEventListener("click", () => {
+  esami.forEach((_, i) => {
+    document.getElementById("voto-" + i).value = "";
+    document.getElementById("entro-" + i).checked = false;
+  });
+
+  [
+    "attivita-inglese",
+    "attivita-finale",
+    "attivita-ulteriori"
+  ].forEach(id => {
+    document.getElementById(id).value = "no";
+  });
+
+  [
+    "entro-inglese",
+    "entro-finale",
+    "entro-ulteriori"
+  ].forEach(id => {
+    document.getElementById(id).checked = false;
+  });
+
+  calcola();
+});
+
 
     calcola();
   </script>
