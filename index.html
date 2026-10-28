@@ -272,9 +272,11 @@
 
       input.id = "voto-" + i;
       input.type = "text";
-      input.inputMode = "decimal";
+      input.inputMode = "text";
       input.autocomplete = "off";
-      input.placeholder = "Es. 28 oppure 30L";
+      input.autocapitalize = "characters";
+      input.spellcheck = false;
+      input.placeholder = "Es. 18-30 oppure 30L";
       input.setAttribute("aria-label", "Voto " + nome);
 
       errore.id = "errore-" + i;
