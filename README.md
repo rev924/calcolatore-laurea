@@ -22,7 +22,7 @@ La media viene calcolata utilizzando i CFU associati a ciascun esame, con un tot
 
 **Base di laurea**
 
-Base di laurea = Media ponderata x (110/30)
+Base di laurea = Media ponderata $ \times \frac{(100)}{30}$
 
 **Punti velocita'**
 
