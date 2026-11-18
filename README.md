@@ -24,6 +24,11 @@ La media viene calcolata utilizzando i CFU associati a ciascun esame, con un tot
 
 Base di laurea = Media ponderata $$\times(\frac{110}{30}$$
 
+'''
+$\times(\frac{110}{30}$
+'''
+
+
 **Punti velocita'**
 
 Punti velocita' = CFU acquisiti entro il 30 settembre del terzo anno di iscrizione × 0,035
