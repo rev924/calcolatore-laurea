@@ -24,7 +24,7 @@ La media viene calcolata utilizzando i CFU associati a ciascun esame, con un tot
 
 Base di laurea = Media ponderata x (110/30)
 
-$\theta\cos=\frac{s[Au]}{d[pc]}$
+$\theta[\cos]=\frac{s[Au]}{d[pc]}$
 
 **Punti velocita'**
 
